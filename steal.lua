@@ -1,8 +1,7 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
-local savedPos, noclipEnabled, noclipConn, speedEnabled = nil, false, nil, false
-local defaultSpeed = 16
+local savedPos, noclipEnabled, noclipConn = nil, false, nil
 
 local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
 gui.Name = "STNGui"
@@ -18,7 +17,6 @@ end
 local saveBtn = createBtn(UDim2.new(0,10,0,10), "Save Position", Color3.fromRGB(0,170,255))
 local teleportBtn = createBtn(UDim2.new(0,10,0,70), "Teleport", Color3.fromRGB(0,255,170))
 local noclipBtn = createBtn(UDim2.new(0,10,0,130), "Enable Noclip", Color3.fromRGB(255,85,0))
-local speedBtn = createBtn(UDim2.new(0,10,0,190), "Enable Speed", Color3.fromRGB(255,215,0))
 
 local function noclip()
     if not noclipEnabled then return end
@@ -27,13 +25,6 @@ local function noclip()
         for _, part in pairs(char:GetChildren()) do
             if part:IsA("BasePart") then part.CanCollide = false end
         end
-    end
-end
-
-local function setSpeed(speed)
-    local hrp = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-    if hrp then
-        hrp.WalkSpeed = speed
     end
 end
 
@@ -73,14 +64,7 @@ noclipBtn.MouseButton1Click:Connect(function()
     end
 end)
 
-speedBtn.MouseButton1Click:Connect(function()
-    speedEnabled = not speedEnabled
-    speedBtn.Text = speedEnabled and "Disable Speed" or "Enable Speed"
-    setSpeed(speedEnabled and 60 or defaultSpeed)
-end)
-
 player.CharacterAdded:Connect(function()
     wait(1)
     if noclipEnabled then noclip() end
-    if speedEnabled then setSpeed(60) else setSpeed(defaultSpeed) end
 end)
